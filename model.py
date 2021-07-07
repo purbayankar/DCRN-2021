@@ -309,7 +309,7 @@ class HetConv(nn.Module):
         self.avg_pooling = nn.AvgPool3d(kernel_size=(5, 5, 1))
         self.full_connection = nn.Sequential(
             nn.Dropout(p=0.5),
-            nn.Linear(4800, classes)  # ,
+            nn.Linear(6720, classes)  # ,
             # nn.Softmax()
         )
 
