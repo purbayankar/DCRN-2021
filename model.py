@@ -297,7 +297,7 @@ class conv_block(nn.Module):  # pytorch
 class HetConv(nn.Module):
     def __init__(self, classes):
         super(HetConv, self).__init__()
-        self.name = 'SSRN'
+        self.name = 'HetConv'
 
         self.conv_net1 = conv_block(1, 24, (1, 1, 7), (0, 0, 3))
         self.conv_net2 = conv_block(24, 24, (1, 1, 7), (0, 0, 3))
