@@ -267,3 +267,62 @@ class LiEtAl(nn.Module):
         #x = self.dropout(x)
         x = self.fc(x)
         return x
+    
+############################################################### HetConv ###################################################
+   
+class conv_block(nn.Module):  # pytorch
+    def __init__(self,
+                 in_channels,
+                 out_channels,
+                 kernel_size,
+                 padding,
+                 use_1x1conv=False,
+                 stride=1):
+        super(conv_block, self).__init__()
+        self.conv = nn.Sequential(
+            nn.Conv3d(
+                in_channels,
+                out_channels,
+                kernel_size=kernel_size,
+                padding=padding,
+                stride=stride), nn.ReLU())
+
+        self.bn = nn.BatchNorm3d(out_channels)
+
+    def forward(self, X):
+        Y = F.relu(self.bn(self.conv(X)))
+        return Y
+    
+  
+class HetConv(nn.Module):
+    def __init__(self, band, classes):
+        super(HetConv, self).__init__()
+        self.name = 'SSRN'
+
+        self.conv_net1 = conv_block(1, 24, (1, 1, 7), (0, 0, 3))
+        self.conv_net2 = conv_block(24, 24, (1, 1, 7), (0, 0, 3))
+        self.conv_net3 = conv_block(24, 24, (1, 1, 7), (0, 0, 3))
+        self.conv_net4 = conv_block(1, 24, (3, 3, 1), (1, 1, 0))
+        self.conv_net5 = conv_block(24, 24, (3, 3, 1), (1, 1, 0))
+        self.conv_net6 = conv_block(24, 24, (3, 3, 1), (1, 1, 0))
+
+        self.avg_pooling = nn.AvgPool3d(kernel_size=(5, 5, 1))
+        self.full_connection = nn.Sequential(
+            nn.Dropout(p=0.5),
+            nn.Linear(4800, classes)  # ,
+            # nn.Softmax()
+        )
+
+    def forward(self, X):
+        x2 = self.conv_net1(X)
+        x2_ = self.conv_net4(X)
+        x2 = x2 + x2_
+        x3 = self.conv_net2(x2)
+        x3_ = self.conv_net5(x2)
+        x3 = x3 + x3_
+        x4 = self.conv_net3(x2)
+        x4_ = self.conv_net6(x2)
+        x4 = x4 + x4_
+        x5 = self.avg_pooling(x4)
+        x5 = x5.view(x5.size(0), -1)
+        return self.full_connection(x5)
