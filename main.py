@@ -22,7 +22,7 @@ opt = parser.parse_args()
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-pathDict = {('./datasets/KSC.mat', './datasets/KSC_gt.mat'): (24, range(4,13,4))}
+pathDict = {('/content/A2S2K-ResNet/dataset/Salinas_corrected.mat', '/content/A2S2K-ResNet/dataset/Salinas_gt.mat'): (24, range(4,13,4))}
 
 for (dataset, gt) in pathDict.keys():
     
