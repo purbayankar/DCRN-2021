@@ -4,7 +4,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 import argparse
 
-from model import SSRN, DCRN, LiEtAl
+from model import SSRN, DCRN, LiEtAl, HetConv
 from loss import NormalizedCrossEntropy, ReverseCrossEntropy
 import data_generator
 from draw_feature_map import draw_feature_map
