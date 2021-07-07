@@ -48,9 +48,10 @@ for (dataset, gt) in pathDict.keys():
             
             data.add_noise(NL_num - data.NL_num)
             data.getshape()
-            model = DCRN(input_channels= data.in_channel, 
-                         patch_size= data.hwz * 2 + 1, 
-                         n_classes= data.class_num).to(device)
+#             model = DCRN(input_channels= data.in_channel, 
+#                          patch_size= data.hwz * 2 + 1, 
+#                          n_classes= data.class_num).to(device)
+            model = HetConv(data.class_num).to(device)
             nce = NormalizedCrossEntropy(data.class_num).to(device)
             rce = ReverseCrossEntropy(data.class_num).to(device)
             ce = nn.CrossEntropyLoss().to(device)
